@@ -1,0 +1,29 @@
+{
+  "name": "superpoker",
+  "version": "0.0.0",
+  "authors": [
+    "Michael Meyers <meyers.m@gmail.com>"
+  ],
+  "description": "Super Planning Poker",
+  "main": "index.html",
+  "keywords": [
+    "scrum"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2",
+    "bootstrap": "^3",
+    "backbone-route-control": "^0.1",
+    "underscore": "^1.8",
+    "backbone": "^1.3",
+    "requirejs-text": "^2"
+  }
+}

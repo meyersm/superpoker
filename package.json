@@ -1,0 +1,18 @@
+{
+  "name": "superpoker",
+  "version": "0.0.0",
+  "description": "Super planning poker",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.14.0",
+    "grunt": "^1.0.1",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-sass": "^1.2.1"
+  }
+}

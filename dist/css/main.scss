@@ -1,0 +1,227 @@
+
+#sp-main {
+ color: #222222;
+}
+
+.sp-newgame {
+  width: 100%;
+  &-form {
+    width: 400px;
+    margin: 200px auto;
+    padding: 20px 20px 45px 20px;
+    border: 1px solid grey;
+    border-radius: 6px;
+    .input-group {
+      margin-bottom: 15px;
+    }
+  }
+}
+
+
+$sideBarWidth: 300px;
+$gameWidthCalc: calc(100% - 300px);
+
+.sp-game {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 1000px;
+  min-height: 600px;
+
+  &-toppanel {
+    position: absolute;
+    top:0;
+    height: 50px;
+    width: $gameWidthCalc;
+    border-bottom: 1px dotted #333333;
+  }
+
+  &-sidepanel {
+    position: absolute;
+    right: 0;
+    width: $sideBarWidth;
+    height: 100%;
+    border-left: 1px dotted #333333;
+    &-top {
+      margin: 15px 10px 1px 10px;
+      .btn{
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+    &-chat {
+      position: absolute;
+      bottom: 1px;
+    }
+    &-events {
+      height: 500px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      border: 1px solid #aaaaaa;
+      position: absolute;
+      bottom: 35px;
+      right: 0;
+      width: $sideBarWidth;
+      &-e {
+        margin: 3px 0;
+      }
+      &-head {
+        font-weight: bold;
+        display:block;
+      }
+      &-text {
+        display:block;
+      }
+      .evt-chat {
+        color: #222222;
+      }
+      .evt-game {
+        color: #aa5555;
+      }
+    }
+    &-endround {
+      text-align: center;
+      span {
+        display: block;
+      }
+      #endround-head {
+        font-size: 3em;
+      }
+      #endround-cardval{
+        font-size: 3.5em;
+      }
+      .endround-consensus {
+        color: green;
+      }
+      .endround-majority {
+        color: orange;
+      }
+      .endround-divided {
+        color: red;
+      }
+    }
+  }
+
+  &-tabletop {
+    position:absolute;
+    top: 60px;
+    width: $gameWidthCalc;
+    height: calc(100% - 220px);
+    &-player {
+      position: relative;
+      height: 145px;
+      width: 135px;
+      display: inline-block;
+      margin: 5px;
+      text-align: center;
+      min-width: 100px;
+      max-width: 160px;
+
+      &-card {
+        transform: rotateY(0deg);
+      }
+
+      &-cardback {
+        transform: rotateY(180deg);
+      }
+
+      .player-card {
+        width: 85px;
+        height: 120px;
+        position: absolute;
+        top: 0;
+        left: 25px;
+        background: #aaaaaa;
+        border: 1px solid black;
+        border-radius: 6px;
+        margin: auto;
+        transition: all 0.7s;
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
+        font-size: 4em;
+        line-height: 2;
+        text-align: center;
+        color: white;
+      }
+      .reveal-flip {
+        transform: rotateY(180deg);
+      }
+      .reveal-flop {
+        transform: rotateY(0deg);
+      }
+      .chosen {
+        background: #1b6d85;
+        box-shadow: 4px 4px 5px grey;
+      }
+
+      &-name {
+        width: 135px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        position:absolute;
+        bottom:0;
+      }
+
+    }
+  }
+
+  &-cards {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: $gameWidthCalc;
+    height: 150px;
+    background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(102,102,102,0.10) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(102,102,102,0.10) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(102,102,102,0.10) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    &-c {
+      position: relative;
+
+      border-radius: 6px;
+      background: #2b542c;
+      border: 2px solid #112f11;
+      line-height: 2;
+
+      display: inline-block;
+      @media (min-width: 1500px) {
+        margin-left: 25px;
+        width: 100px;
+        height: 141px;
+        font-size: 4.5em;
+        top: 8px;
+      }
+      @media (min-width: 1215px) and (max-width: 1500px) {
+        margin-left: 15px;
+        width: 85px;
+        height: 120px;
+        font-size: 4em;
+        top: 28px;
+      }
+      @media (max-width: 1214px) {
+        margin-left: 3px;
+        width: 70px;
+        height: 100px;
+        font-size: 2em;
+        top: 30px;
+      }
+
+      text-align: center;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 2px 2px 5px grey;
+    }
+    &-c:hover {
+      top: 5px;
+      box-shadow: 6px 6px 5px grey;
+    }
+    .selected {
+      transform: rotate(170deg);
+      top: -120px;
+      box-shadow: 2px 2px 5px grey !important;
+      border-width: 1px;
+    }
+  }
+
+}

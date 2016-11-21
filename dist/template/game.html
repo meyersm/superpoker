@@ -1,0 +1,57 @@
+<div id="sp-game" class="sp-game">
+    <div class="sp-game-toppanel">
+        <div class="sp-game-toppanel-left">
+            <span class="sp-game-toppanel-title">Title</span>
+            <span class="sp-game-toppanel-desc">Desc</span>
+        </div>
+        <div class="sp-game-toppanel-right">
+            <span class="sp-game-toppanel-story">Story Name</span>
+            <span class="sp-game-toppanel-ticket">TICKET-123</span>
+        </div>
+    </div>
+    <div class="sp-game-sidepanel">
+        <div class="sp-game-sidepanel-top">
+            <button id="sidecontrol-reveal" data-action="reveal" class="btn btn-success">Reveal Points</button>
+            <button id="sidecontrol-reset" data-action="reset" class="btn btn-danger">Reset/Repoint</button>
+            <button id="sidecontrol-next" data-action="next" class="btn btn-primary">Next Round</button>
+        </div>
+        <div class="sp-game-sidepanel-endround">
+            <span id="endround-head"></span>
+            <span id="endround-cardval"></span>
+            <span id="endround-detail"></span>
+            <span id="endround-avg"></span>
+        </div>
+        <div class="sp-game-sidepanel-events"></div>
+        <div class="sp-game-sidepanel-chat">
+            <div class="input-group">
+                <input id="sidecontrol-chatinput" type="text" class="form-control" placeholder="Chat Msg">
+                <span class="input-group-btn">
+                    <button id="sidecontrol-chatbtn" class="btn btn-primary" type="button">Send</button>
+                </span>
+            </div>
+        </div>
+
+    </div>
+    <div class="sp-game-tabletop"></div>
+    <div class="sp-game-cards">
+
+    </div>
+</div>
+<div id="sp-modal-joingame" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Join Game</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon">Name</span>
+                    <input type="text" id="sp-modal-joingame-name" class="form-control" maxlength="18" placeholder="Username" aria-describedby="basic-addon">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="sp-modal-joingame-btn" class="btn btn-primary">Join</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
