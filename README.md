@@ -1,7 +1,12 @@
 # superpoker
 A planning poker app
 
+
 ## Build
+`npm install`
+
+`bower install`
+
 `grunt`
 
 Files will be placed in /dist
