@@ -40,7 +40,6 @@
       position: absolute;
       bottom: 1px; }
     .sp-game-sidepanel-events {
-      height: 500px;
       overflow-y: scroll;
       overflow-x: hidden;
       border: 1px solid #aaaaaa;
@@ -48,6 +47,15 @@
       bottom: 35px;
       right: 0;
       width: 300px; }
+      @media (max-height: 650px) {
+        .sp-game-sidepanel-events {
+          height: 150px; } }
+      @media (max-height: 860px) and (min-height: 651px) {
+        .sp-game-sidepanel-events {
+          height: 300px; } }
+      @media (min-height: 861px) {
+        .sp-game-sidepanel-events {
+          height: 500px; } }
       .sp-game-sidepanel-events-e {
         margin: 3px 0; }
       .sp-game-sidepanel-events-head {
