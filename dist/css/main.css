@@ -25,6 +25,19 @@
     height: 50px;
     width: calc(100% - 300px);
     border-bottom: 1px dotted #333333; }
+    .sp-game-toppanel-left {
+      background: #4371ed;
+      border-right: 1px solid black;
+      color: white;
+      font-size: 1em;
+      width: 31px;
+      height: 50px;
+      display: inline-block;
+      line-height: 3.5; }
+      .sp-game-toppanel-left span {
+        margin-left: 8px; }
+    .sp-game-toppanel-right {
+      display: inline; }
   .sp-game-sidepanel {
     position: absolute;
     right: 0;
@@ -116,6 +129,20 @@
         line-height: 2;
         text-align: center;
         color: white; }
+      .sp-game-tabletop-player .observer-card {
+        width: 85px;
+        height: 120px;
+        position: absolute;
+        top: 0;
+        left: 25px;
+        border: none;
+        border-radius: 6px;
+        margin: auto;
+        font-size: 4em;
+        line-height: 2;
+        text-align: center;
+        background: none;
+        color: #DDDDDD; }
       .sp-game-tabletop-player .reveal-flip {
         transform: rotateY(180deg); }
       .sp-game-tabletop-player .reveal-flop {
@@ -182,5 +209,18 @@
       top: -120px;
       box-shadow: 2px 2px 5px grey !important;
       border-width: 1px; }
+
+.sp-modal-toggle {
+  margin-top: 10px; }
+  .sp-modal-toggle-head {
+    font-weight: bold;
+    margin-left: 8px;
+    margin-right: 5px; }
+  .sp-modal-toggle-desc {
+    font-size: 11px; }
+
+.sp-modal-github {
+  font-size: 2em;
+  color: black; }
 
 /*# sourceMappingURL=main.css.map */

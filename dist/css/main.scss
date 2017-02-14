@@ -35,6 +35,22 @@ $gameWidthCalc: calc(100% - 300px);
     height: 50px;
     width: $gameWidthCalc;
     border-bottom: 1px dotted #333333;
+    &-left {
+      background: #4371ed;
+      border-right: 1px solid black;
+      color: white;
+      font-size: 1em;
+      width: 31px;
+      height: 50px;
+      display: inline-block;
+      line-height: 3.5;
+      span {
+        margin-left: 8px;
+      }
+    }
+    &-right {
+      display: inline;
+    }
   }
 
   &-sidepanel {
@@ -152,6 +168,21 @@ $gameWidthCalc: calc(100% - 300px);
         text-align: center;
         color: white;
       }
+      .observer-card {
+        width: 85px;
+        height: 120px;
+        position: absolute;
+        top: 0;
+        left: 25px;
+        border: none;
+        border-radius: 6px;
+        margin: auto;
+        font-size: 4em;
+        line-height: 2;
+        text-align: center;
+        background: none;
+        color: #DDDDDD;
+      }
       .reveal-flip {
         transform: rotateY(180deg);
       }
@@ -232,4 +263,22 @@ $gameWidthCalc: calc(100% - 300px);
     }
   }
 
+}
+
+.sp-modal {
+  &-toggle {
+    margin-top: 10px;
+    &-head {
+      font-weight: bold;
+      margin-left: 8px;
+      margin-right: 5px;
+    }
+    &-desc {
+      font-size: 11px;
+    }
+  }
+  &-github {
+    font-size: 2em;
+    color:black;
+  }
 }

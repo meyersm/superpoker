@@ -5,7 +5,10 @@ define( function (require) {
     var tmplCreate = require('text!template/newgame.html');
     var cardTmpl = require('text!template/myCard.html');
     var playerTmpl = require('text!template/otherCard.html');
+    var observerTmpl = require('text!template/observerCard.html');
     var eventDispTmpl = require('text!template/eventDisplay.html');
+
+    var standardCardDeck = [1,2,3,5,8,13,20,40,'?'];
 
     return Backbone.View.extend({
         initialize: function (options) {
@@ -34,7 +37,10 @@ define( function (require) {
 			this.app.firebase.ref('games/' + newGameGuid + '/gamedata').set({
 				title: $('#newgame-title').val(),
 				desc: $('#newgame-desc').val(),
-				round: 1
+				round: 1,
+                startTime: Date.now(),
+                leader: this.app.userGuid
+
 			});
 			this.app.router.navigate('game/'+newGameGuid, {trigger: true});
 
@@ -46,20 +52,29 @@ define( function (require) {
         preGame: function() {
             var self = this;
             this.$joinGame = $('#sp-modal-joingame');
+            $('#observer-checkbox').bootstrapToggle();
             this.$joinGameName = $('#sp-modal-joingame-name');
             this.$cards = $('.sp-game-cards');
             this.$tabletop = $('.sp-game-tabletop');
             this.$sidepanel = $('.sp-game-sidepanel');
             this.$sidepanelChatInput = $('#sidecontrol-chatinput');
             this.$sidepanelEvents = $('.sp-game-sidepanel-events');
+			this.$endRoundHead = $('#endround-head');
+			this.$endRoundDetail = $('#endround-detail');
 
             this.$joinGameName.val(this.app.user);
             $('#sp-modal-joingame-btn').on('click', function () {
+                self.isObserver = false;
                 self.app.user = $('#sp-modal-joingame-name').val();
+                if ($('#observer-checkbox').is(":checked"))
+                    self.isObserver = true;
                 self.setupGame.apply(self);
                 self.$joinGame.modal('hide');
             });
             this.$joinGame.modal();
+            $('#sp-app-info').on('click', function () {
+                $('#sp-modal-appinfo').modal('show');
+            })
 
         },
 
@@ -76,14 +91,16 @@ define( function (require) {
                 $('.sp-game-toppanel-desc').text(data.desc);
             });
             //Setup Cards
-            var cards = [1,2,3,5,8,13,20,40,'?'];
-            _.each(cards, function(c) {
-                self.$cards.append(_.template(cardTmpl)({card: c}));
-            });
-            $('.sp-game-cards-c').on('click', $.proxy(self.cardSelected, self));
+            self.cards = standardCardDeck;
+            if (!self.isObserver) {
+                _.each(self.cards, function(c) {
+                    self.$cards.append(_.template(cardTmpl)({card: c}));
+                });
+                $('.sp-game-cards-c').on('click', $.proxy(self.cardSelected, self));
+            }
             //Setup Tabletop
 			this.playerCache = {};
-            var players = self.app.firebase.ref('games/' + self.app.current_game_id + '/players');
+            var players = self.app.firebase.ref('games/' + self.app.current_game_id + '/users');
             players.on('value', function(snapshot) {
                 self.setupTabletop(snapshot.val());
             });
@@ -93,7 +110,7 @@ define( function (require) {
             });
             //Setup gamestate events
             var eventStartupThrottle = true;
-            var gameEvents = self.app.firebase.ref('games/' + self.app.current_game_id + '/events').limitToLast(5);;
+            var gameEvents = self.app.firebase.ref('games/' + self.app.current_game_id + '/events').limitToLast(5);
             gameEvents.on('child_added', function(data) {
                 if (!eventStartupThrottle)
                     self.handleGameEvent(data.key, data.val().action, data.val().user);
@@ -111,6 +128,11 @@ define( function (require) {
             chatMsgs.on('child_added', function(data) {
                 self.handleChatMessage(data.key, data.val().text, data.val().user);
             });
+            $('#sidecontrol-chatinput').keyup(function(event){
+                if(event.keyCode == 13){
+                    $('#sidecontrol-chatbtn').click();
+                }
+            });
             $('#sidecontrol-chatbtn').on('click', function () {
                 var text = self.$sidepanelChatInput.val();
                 self.$sidepanelChatInput.val('');
@@ -124,7 +146,8 @@ define( function (require) {
             var self = this;
             self.app.firebase.ref('games/' + this.app.current_game_id + '/users/' + self.app.userGuid).set({
                 name: self.app.user,
-                currentCard: null
+                currentCard: null,
+                observer: self.isObserver
             });
             var player = {};
             player[self.app.userGuid] = self.app.user;
@@ -146,6 +169,9 @@ define( function (require) {
 
         sendCard: function (num) {
             var self = this;
+            if (!_.contains(self.cards, num)) {
+                console.log('Invalid card value - ' + num + ' This will be interpreted as a ? - Reload the app to correct this issue');
+            }
             self.app.firebase.ref('games/' + this.app.current_game_id + '/cards/' + self.app.userGuid).update({
                 value: num
             });
@@ -155,11 +181,28 @@ define( function (require) {
             var self = this;
 
             _.each(players, function(p,k) {
-                var data = {guid: k, name: p};
-                if (self.playerCache[k] !== true)
-                	self.$tabletop.append(_.template(playerTmpl)(data));
-				self.playerCache[k] = true;
+                var data = {guid: k, name: p.name, observer: p.observer, leader: p.leader};
+                var playerCacheHash = self.generatePlayerCacheHash(p);
+                if (self.playerCache[k] !== playerCacheHash) {
+                    if (self.playerCache[k]) {
+                        self.$tabletop.find('[data-guid='+ k + ']').remove();
+                    }
+                    if (p.observer === true)
+                        self.$tabletop.prepend(_.template(observerTmpl)(data));
+                    else
+                        self.$tabletop.append(_.template(playerTmpl)(data));
+                    self.playerCache[k] = playerCacheHash;
+                }
             });
+        },
+
+        generatePlayerCacheHash: function (player) {
+            var pch = player.name + '::';
+            if (player.observer)
+                pch = pch + '1';
+            else
+                pch = pch + '0';
+            return pch;
         },
 
         updateTabletop: function (cards) {
@@ -168,6 +211,9 @@ define( function (require) {
             self.$tabletop.find('.chosen').removeClass('chosen');
             _.each(cards, function(c,p) {
                 self.$tabletop.find('[data-guid='+ p + '] > .sp-game-tabletop-player-card').addClass('chosen');
+                if ((c.value !== undefined) && (!_.contains(self.cards, c.value))) {
+                    c.value = '?';
+                }
                 self.hiddenDeck[p] = c;
             });
 
@@ -228,15 +274,11 @@ define( function (require) {
             var self = this;
             var i = 0;
             _.each(self.hiddenDeck, function (c, p) {
-                setTimeout(function () {
-                    var $card = self.$tabletop.find('[data-guid='+ p + '] > .sp-game-tabletop-player-card');
-                    var $cardBack = self.$tabletop.find('[data-guid='+ p + '] > .sp-game-tabletop-player-cardback');
-                    $card.addClass('reveal-flip');
-                    $cardBack.addClass('reveal-flop');
-                    $cardBack.text(c.value);
-                }, (i * 150));
-                i++;
-
+                var $card = self.$tabletop.find('[data-guid='+ p + '] > .sp-game-tabletop-player-card');
+                var $cardBack = self.$tabletop.find('[data-guid='+ p + '] > .sp-game-tabletop-player-cardback');
+                $card.addClass('reveal-flip');
+                $cardBack.addClass('reveal-flop');
+                $cardBack.text(c.value);
             });
             self.calculateStoryPoints();
         },
@@ -285,19 +327,20 @@ define( function (require) {
             var spAvg = 0;
             if ((i - pass) > 0)
                 spAvg = Math.round(total / (i - pass));
-            $('#endround-head').removeClass();//Remove all classes
+
+            this.$endRoundHead.removeClass();//Remove all classes
             if (j === 1) {
-                $('#endround-head').text('Consensus');
-                $('#endround-head').addClass('endround-consensus');
-                $('#endround-detail').text('Unanimous votes');
+                this.$endRoundHead.text('Consensus');
+                this.$endRoundHead.addClass('endround-consensus');
+                this.$endRoundDetail.text('Unanimous votes');
             } else if (majorityReached) {
-                $('#endround-head').text('Majority');
-                $('#endround-head').addClass('endround-majority');
-                $('#endround-detail').text('With ' + currHigh.per + '% of vote');
+                this.$endRoundHead.text('Majority');
+                this.$endRoundHead.addClass('endround-majority');
+				this.$endRoundDetail.text('With ' + currHigh.per + '% of vote (' + currHigh.val + ' of ' + i + ')');
             } else {
-                $('#endround-head').text('Divided vote');
-                $('#endround-head').addClass('endround-divided');
-                $('#endround-detail').text('Most common with '+ currHigh.val);
+                this.$endRoundHead.text('Divided vote');
+                this.$endRoundHead.addClass('endround-divided');
+				this.$endRoundDetail.text('With ' + currHigh.per + '% of vote (' + currHigh.val + ' of ' + i + ')');
             }
 
             $('#endround-cardval').text(currHigh.sp);
