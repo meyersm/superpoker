@@ -9,7 +9,11 @@ A planning poker app
 
 `grunt`
 
-Files will be placed in /dist
+Files will be placed in dist/
+
+`grunt release`
+
+A Build Zip will be generated in release/
 
 ## Run locally
 `node server.js`

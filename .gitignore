@@ -5,3 +5,4 @@ Homestead.yaml
 bower_components/*
 node_modules/*
 .env
+release/*
